@@ -1,1 +1,1 @@
-# Programeerimine-2
+# Programeerimine-2 - Christina Vahi
