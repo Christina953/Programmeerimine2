@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace KooliProjekt.Application.Data
@@ -7,6 +8,7 @@ namespace KooliProjekt.Application.Data
     public class InvoiceLine
     {
         public int Id { get; set; }
+        [Required, MaxLength(200)]
         public string Description { get; set; }    // "Renditeenus 123ABC"
 
         // Ülesanne eeldab ühte rida broneeringu kohta (kogus 1, ühikuhind = valemiga arvutatud summa).

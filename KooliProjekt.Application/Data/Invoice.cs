@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace KooliProjekt.Application.Data
 {
+    [Index(nameof(InvoiceNumber), IsUnique = true)]
     public class Invoice
     {
         public int Id { get; set; }
+        [Required, MaxLength(50)]
         public string InvoiceNumber { get; set; }
         public DateTime InvoiceDate { get; set; }
         public DateTime DueDate { get; set; }
