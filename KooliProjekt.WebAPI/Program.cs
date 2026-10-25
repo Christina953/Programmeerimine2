@@ -57,6 +57,8 @@ namespace KooliProjekt.WebAPI
             using (var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
             {
                 dbContext.Database.Migrate();
+
+                SeedData.GenerateSeedData(dbContext);
             };
 
             app.Run();

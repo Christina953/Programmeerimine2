@@ -17,7 +17,17 @@ namespace KooliProjekt.Application.Data
 
         [MaxLength(50)] 
         public string Model { get; set; }
+        
+        [MaxLength(30)]
+        public string BodyType { get; set; }
+        
+        [Required, MaxLength(20)]
+        public string FuelType { get; set; }
+        [MaxLength(20)]
+        public string Transmission { get; set; }
+
         public int Year { get; set; }
+        public int Seats { get; set; }
         public decimal PricePerMinute { get; set; }
         public decimal PricePerKilometer { get; set; }
         //võimalik edasiarendus, juhul kui soovitakse rakendada päevahinda.
