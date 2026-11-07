@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using KooliProjekt.Application.Data;
 using KooliProjekt.Application.Features.Cars;
 using KooliProjekt.Application.Infrastructure.Paging;
+using KooliProjekt.Application.Infrastructure.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ namespace KooliProjekt.WebAPI.Controllers
         }
 
         [HttpGet("List")]
-        public async Task<PagedResult<Car>> List(int page, int pageSize)
+        public async Task<IActionResult> List(int page, int pageSize)
         {
             var query = new ListCarsQuery
             {
@@ -27,7 +28,7 @@ namespace KooliProjekt.WebAPI.Controllers
             };
             var result = await _mediator.Send(query);
 
-            return result;
+            return Result(result);
         }
 
         [HttpGet("Get/{id:int}")]
@@ -39,14 +40,9 @@ namespace KooliProjekt.WebAPI.Controllers
             }
 
             var query = new GetCarQuery { Id = id };
-
             var result = await _mediator.Send(query);
-            if (result == null)
-            {
-                return NotFound();
-            }
 
-            return Ok(result);
+            return Result(result);
         }
     }
 }

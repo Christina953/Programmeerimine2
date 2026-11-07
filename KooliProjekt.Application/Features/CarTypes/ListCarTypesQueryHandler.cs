@@ -4,12 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using KooliProjekt.Application.Data;
 using KooliProjekt.Application.Infrastructure.Paging;
+using KooliProjekt.Application.Infrastructure.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace KooliProjekt.Application.Features.CarTypes
 {
-    public class ListCarTypesQueryHandler : IRequestHandler<ListCarTypesQuery, PagedResult<CarType>>
+    public class ListCarTypesQueryHandler : IRequestHandler<ListCarTypesQuery, OperationResult<PagedResult<CarType>>>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -18,11 +19,12 @@ namespace KooliProjekt.Application.Features.CarTypes
             _dbContext = dbContext;
         }
 
-        public async Task<PagedResult<CarType>> Handle(ListCarTypesQuery request, CancellationToken cancellationToken)
+        public async Task<OperationResult<PagedResult<CarType>>> Handle(ListCarTypesQuery request, CancellationToken cancellationToken)
         {
-            var results = await _dbContext.CarTypes.OrderBy(ct => ct.Id).GetPagedAsync(request.Page, request.PageSize);
+            var pagedCarTypes = await _dbContext.CarTypes.OrderBy(ct => ct.Id).GetPagedAsync(request.Page, request.PageSize);
+            var result = new OperationResult<PagedResult<CarType>>(pagedCarTypes);
 
-            return results;
+            return result;
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using KooliProjekt.Application.Data;
+using KooliProjekt.Application.Infrastructure.Results;
 using MediatR;
 
 namespace KooliProjekt.Application.Features.CarTypes
 {
-    public class GetCarTypeQuery : IRequest<CarType>
+    public class GetCarTypeQuery : IRequest<OperationResult<CarType>>
     {
         public int Id { get; set; }
     }

@@ -13,6 +13,9 @@ namespace KooliProjekt.WebAPI.Controllers
             new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
+#if (DEBUG)
+                Formatting = Formatting.Indented,
+#endif
                 NullValueHandling = NullValueHandling.Ignore                
             };
 

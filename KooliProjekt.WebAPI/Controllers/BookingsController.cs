@@ -19,7 +19,7 @@ namespace KooliProjekt.WebAPI.Controllers
         }
 
         [HttpGet("List")]
-        public async Task<PagedResult<Booking>> List(int page, int pageSize)
+        public async Task<IActionResult> List(int page, int pageSize)
         {
             var query = new ListBookingsQuery
             { 
@@ -28,7 +28,7 @@ namespace KooliProjekt.WebAPI.Controllers
             };
             var result = await _mediator.Send(query);
 
-            return result;
+            return Result(result);
         }
 
         [HttpGet("Get/{id:int}")]
@@ -42,12 +42,8 @@ namespace KooliProjekt.WebAPI.Controllers
             var query = new GetBookingQuery { Id = id };
 
             var result = await _mediator.Send(query);
-            if (result == null)
-            {
-                return NotFound();
-            }
 
-            return Ok(result);
+            return Result(result);
         }
     }
 }
