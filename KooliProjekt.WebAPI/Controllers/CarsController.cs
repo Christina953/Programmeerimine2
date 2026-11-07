@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using KooliProjekt.Application.Data;
 using KooliProjekt.Application.Features.Cars;
+using KooliProjekt.Application.Infrastructure.Paging;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +18,13 @@ namespace KooliProjekt.WebAPI.Controllers
         }
 
         [HttpGet("List")]
-        public async Task<IEnumerable<Car>> List()
+        public async Task<PagedResult<Car>> List(int page, int pageSize)
         {
-            var query = new ListCarsQuery();
+            var query = new ListCarsQuery
+            {
+                Page = page,
+                PageSize = pageSize
+            };
             var result = await _mediator.Send(query);
 
             return result;
