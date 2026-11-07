@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using KooliProjekt.Application.Data;
 using KooliProjekt.Application.Features.Bookings;
+using KooliProjekt.Application.Infrastructure.Paging;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KooliProjekt.WebAPI.Controllers
 {
@@ -17,9 +19,13 @@ namespace KooliProjekt.WebAPI.Controllers
         }
 
         [HttpGet("List")]
-        public async Task<IEnumerable<Booking>> List()
+        public async Task<PagedResult<Booking>> List(int page, int pageSize)
         {
-            var query = new ListBookingsQuery();
+            var query = new ListBookingsQuery
+            { 
+            Page = page,
+            PageSize = pageSize
+            };
             var result = await _mediator.Send(query);
 
             return result;

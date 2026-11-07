@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using KooliProjekt.Application.Data;
 using KooliProjekt.Application.Features.Invoices;
+using KooliProjekt.Application.Infrastructure.Paging;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +18,13 @@ namespace KooliProjekt.WebAPI.Controllers
         }
 
         [HttpGet("List")]
-        public async Task<IEnumerable<Invoice>> List()
+        public async Task<PagedResult<Invoice>> List(int page, int pageSize)
         {
-            var query = new ListInvoicesQuery();
+            var query = new ListInvoicesQuery
+            { 
+                Page = page,
+                PageSize = pageSize
+            };
             var result = await _mediator.Send(query);
 
             return result;
