@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using KooliProjekt.Application.Data;
+using KooliProjekt.Application.Dto;
 using KooliProjekt.Application.Infrastructure.Paging;
 using KooliProjekt.Application.Infrastructure.Results;
 using MediatR;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KooliProjekt.Application.Features.CarTypes
 {
-    public class ListCarTypesQueryHandler : IRequestHandler<ListCarTypesQuery, OperationResult<PagedResult<CarType>>>
+    internal class ListCarTypesQueryHandler : IRequestHandler<ListCarTypesQuery, OperationResult<PagedResult<CarTypeDto>>>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -19,10 +20,18 @@ namespace KooliProjekt.Application.Features.CarTypes
             _dbContext = dbContext;
         }
 
-        public async Task<OperationResult<PagedResult<CarType>>> Handle(ListCarTypesQuery request, CancellationToken cancellationToken)
+        public async Task<OperationResult<PagedResult<CarTypeDto>>> Handle(ListCarTypesQuery request, CancellationToken cancellationToken)
         {
-            var pagedCarTypes = await _dbContext.CarTypes.OrderBy(ct => ct.Id).GetPagedAsync(request.Page, request.PageSize);
-            var result = new OperationResult<PagedResult<CarType>>(pagedCarTypes);
+            var result = new OperationResult<PagedResult<CarTypeDto>>();
+            result.Value = await _dbContext.CarTypes
+                .AsNoTracking()
+                .OrderBy(cartype => cartype.Id)
+                .Select(cartype => new CarTypeDto
+                {
+                    Id = cartype.Id,
+                    Name = cartype.Name,
+                })
+            .GetPagedAsync(request.Page, request.PageSize);
 
             return result;
         }
