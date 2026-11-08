@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using KooliProjekt.Application.Data;
+using KooliProjekt.Application.Dto;
 using KooliProjekt.Application.Infrastructure.Paging;
 using KooliProjekt.Application.Infrastructure.Results;
 using MediatR;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KooliProjekt.Application.Features.Cars
 {
-    public class ListCarsQueryHandler : IRequestHandler<ListCarsQuery, OperationResult<PagedResult<Car>>>
+    internal class ListCarsQueryHandler : IRequestHandler<ListCarsQuery, OperationResult<PagedResult<CarDto>>>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -19,10 +20,26 @@ namespace KooliProjekt.Application.Features.Cars
             _dbContext = dbContext;
         }
 
-        public async Task<OperationResult<PagedResult<Car>>> Handle(ListCarsQuery request, CancellationToken cancellationToken)
+        public async Task<OperationResult<PagedResult<CarDto>>> Handle(ListCarsQuery request, CancellationToken cancellationToken)
         {
-            var pagedCars = await _dbContext.Cars.OrderBy(c => c.Id).GetPagedAsync(request.Page, request.PageSize);
-            var result = new OperationResult<PagedResult<Car>>(pagedCars);
+            var result = new OperationResult<PagedResult<CarDto>>();
+            result.Value = await _dbContext.Cars
+                .AsNoTracking()
+                .OrderBy(car => car.Id)
+                .Select(car => new CarDto
+                {
+                    Id = car.Id,
+                    Brand = car.Brand,
+                    Model = car.Model,
+                    Year = car.Year,
+                    BodyType = car.BodyType,
+                    FuelType = car.FuelType,
+                    Transmission = car.Transmission,
+                    Seats = car.Seats,
+                    PricePerMinute = car.PricePerMinute,
+                    PricePerKilometer = car.PricePerKilometer,
+                })
+                .GetPagedAsync(request.Page, request.PageSize);
 
             return result;
         }
