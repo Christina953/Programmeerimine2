@@ -44,5 +44,20 @@ namespace KooliProjekt.WebAPI.Controllers
 
             return Result(result);
         }
+
+        [HttpPost("Save")]
+        public async Task<IActionResult> Save([FromBody] SaveCarCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Result(result);
+        }
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> Delete([FromBody] DeleteCarCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            return Result(result);
+        }
     }
 }
